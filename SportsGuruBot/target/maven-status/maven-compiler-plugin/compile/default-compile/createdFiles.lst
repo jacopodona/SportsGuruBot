@@ -1,2 +1,4 @@
-com\provabot\provatelegram\Main.class
-com\provabot\provatelegram\SportsGuruBot.class
+com\SportsGuruBot\Bot\modules\RequestCollection.class
+com\SportsGuruBot\Bot\SportsGuruBot.class
+com\SportsGuruBot\Bot\modules\Request.class
+com\SportsGuruBot\Bot\Main.class

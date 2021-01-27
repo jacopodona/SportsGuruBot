@@ -5,6 +5,8 @@
  */
 package com.SportsGuruBot.Bot;
 
+import com.SportsGuruBot.Bot.modules.Request;
+import com.SportsGuruBot.Bot.modules.RequestCollection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -17,7 +19,14 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
  * @author Jacopo
  */
 public class SportsGuruBot extends TelegramLongPollingBot{
+    
+    private RequestCollection collection;
 
+    public SportsGuruBot() {
+        collection=new RequestCollection();
+    }
+    
+    
     @Override
     public String getBotToken() {
         return "1597748075:AAGclJizyoHHOie97Qb85xES12JL3XvyLoM";
@@ -26,17 +35,46 @@ public class SportsGuruBot extends TelegramLongPollingBot{
     @Override
     public void onUpdateReceived(Update update) {
         SendMessage message=new SendMessage();
+        String text;
+        String chatId;
         if (update.hasMessage() && update.getMessage().hasText()) {
-            switch(update.getMessage().getText()){
-                case "/research":
-                    message.setText("You selected to make a new research");
-                    break;
-                case "/clear":
-                    message.setText("You selected to cancel your current research");
-                    break;
-                default:
-                    message.setText("Unknown command, type /help for a list of available commands");
-                    break;
+            text=update.getMessage().getText();
+            chatId=update.getMessage().getChatId().toString();
+            if(text.equals("/research")){
+                collection.removeByUser(chatId);
+                Request r=new Request(chatId);
+                collection.add(r);
+                message.setText("Inserisci il nome dell'atleta su cui vuoi conoscere una statistica");
+            }
+            else if(text.equals("/help")){
+                
+            }
+            else{
+                Request precedente=collection.getRequestByUser(chatId);
+                int index=collection.getIndex(precedente.getUserid());
+                if(precedente==null){
+                    message.setText("Comando non valido. Utilizza /research per effettuare una nuova ricerca oppure /help  per avere una lista dei comandi");
+                }
+                else{
+                    if(precedente.getNome()==null){//allora mi ha inviato il nome
+                        String nome= update.getMessage().getText();
+                        precedente.setNome(nome);
+                        collection.modify(index, precedente);
+                        message.setText("Inserisci la statistica che ti interessa di "+nome);
+                    }
+                    else if(precedente.getStatistica()==null){//allora mi ha inviato la statistica
+                        String statistica= update.getMessage().getText();
+                        precedente.setStatistica(statistica);
+                        collection.modify(index, precedente);
+                        message.setText("Inserisci la data da cui conteggiare la statistica");
+                    }
+                    else if(precedente.getData()==null){//allora mi ha inviato la data
+                        String data= update.getMessage().getText();
+                        precedente.setData(data);
+                        collection.modify(index, precedente);
+                        message.setText("Riepilogo:\n"+precedente.toString());
+                    }
+                }
             }
             message.setChatId(update.getMessage().getChatId().toString());
             try {
