@@ -52,6 +52,7 @@ public class RequestCollection {
         for(Request r:collection){
             if(r.getUserid().equals(userId)){
                 collection.remove(r);
+                System.out.println("Richiesta dell'utente "+userId+" rimossa");
             }
         }
     }
