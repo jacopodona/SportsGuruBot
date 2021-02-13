@@ -11,19 +11,53 @@ package com.SportsGuruBot.Bot.modules;
  */
 public class Request {
     
-    private String userid, nome, statistica, data;
+    private String chatId, nome, statistica, data;
+    private int iterator;
 
-    public Request(String userid) {
+    public Request() {
+    }
+
+    /*public Request(String userid) {
         this.userid=userid;
         nome=null;
         statistica=null;
         data=null;
+        iterator=0;
+    }*/
+
+    public Request(String chatId, String nome, String statistica, String data, int iterator) {
+        this.chatId = chatId;
+        this.nome = nome;
+        this.statistica = statistica;
+        this.data = data;
+        this.iterator = iterator;
+    }
+
+    public String getChatId() {
+        return chatId;
+    }
+    
+    public String getNome() {
+        return nome;
+    }
+
+    public String getStatistica() {
+        return statistica;
+    }
+    
+    public int getIterator() {
+            return iterator;
+    }
+    
+    public String getData() {
+        return data;
+    }
+
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
     }
     
     
-    public void setUserId(String userid) {
-        this.userid = userid;
-    }
 
     public void setNome(String nome) {
         this.nome = nome;
@@ -37,26 +71,12 @@ public class Request {
         this.statistica = statistica;
     }
 
-    public String getNome() {
-        return nome;
+    public void setIterator(int iterator) {
+        this.iterator = iterator;
     }
-
-    public String getData() {
-        return data;
-    }
-
-    public String getStatistica() {
-        return statistica;
-    }
-
-    public String getUserid() {
-        return userid;
-    }
-    
-    
     
     public String toString(){
-        return "Utente: "+userid+"Atleta: "+nome+"\nStatistica: "+statistica+"\nData: "+data;
+        return "Utente: "+chatId+"\nAtleta: "+nome+"\nStatistica: "+statistica+"\nData: "+data+"\nIterator: "+iterator;
     }
     
 }
