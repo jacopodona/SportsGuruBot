@@ -1,3 +1,4 @@
+utilities\HttpRequest.class
+com\SportsGuruBot\Bot\SportsGuruBot.class
 com\SportsGuruBot\Bot\modules\Request.class
 com\SportsGuruBot\Bot\Main.class
-com\SportsGuruBot\Bot\SportsGuruBot.class

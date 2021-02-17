@@ -31,6 +31,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 import org.bson.Document;
+import utilities.HttpRequest;
 
 /**
  *
@@ -83,6 +84,11 @@ public class SportsGuruBot extends TelegramLongPollingBot{
                 System.out.println("Richiesta di aiuto");
                 message.setText("Utilizza /research per effettuare una ricerca");
             }
+            else if(text.equals("/ping")){
+                System.out.println("Ping server");
+                System.out.println(new HttpRequest("").run());
+                message.setText("Ping effettuato");
+            }
             else{
                 //Request precedente=collection.getRequestByUser(chatId);
                 Request precedente=collection.find(eq("chatId", chatId)).first();
@@ -111,6 +117,7 @@ public class SportsGuruBot extends TelegramLongPollingBot{
                         //collection.modify(index, precedente);
                         collection.updateOne(eq("chatId", chatId), set("iterator", precedente.getIterator()+1));
                         message.setText("Riepilogo: \n"+precedente.toString());
+                        new HttpRequest(/*"ranking/teams/20182019"*/"").run();
                     }
                     else{
                         message.setText("Comando non valido. Utilizza /research per effettuare una nuova ricerca oppure /help  per avere una lista dei comandi");
