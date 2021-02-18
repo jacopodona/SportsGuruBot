@@ -19,20 +19,21 @@ import java.net.URLConnection;
  */
 public class HttpRequest {
     
-    final String serverURL = "http://localhost:4000/ranking/teams/20182019";//localhost computer
+    final String serverURL = "http://localhost:4000/";//localhost computer
     private String request;
     private String parameter;
     private HttpURLConnection connection;
     
     public HttpRequest(String request) {
         connection= null;
+        //System.out.println("Richiesta Ricevuta: "+serverURL+request);
         this.request=request;
     }
     
     public String run(){
         String result="";
         try{
-            URL yahoo = new URL(serverURL);
+            URL yahoo = new URL(serverURL+request);
             URLConnection yc = yahoo.openConnection();
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(

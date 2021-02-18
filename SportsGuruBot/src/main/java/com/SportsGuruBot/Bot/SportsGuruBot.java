@@ -31,6 +31,8 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 import org.bson.Document;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import utilities.HttpRequest;
 
 /**
@@ -86,7 +88,9 @@ public class SportsGuruBot extends TelegramLongPollingBot{
             }
             else if(text.equals("/ping")){
                 System.out.println("Ping server");
-                System.out.println(new HttpRequest("").run());
+                String request=new HttpRequest("player/yellows/Ronaldo%20C.&20182019").run();
+                System.out.println(request);
+                System.out.println(extractFromJSON(request, "yellows"));
                 message.setText("Ping effettuato");
             }
             else{
@@ -101,6 +105,7 @@ public class SportsGuruBot extends TelegramLongPollingBot{
                         String nome= update.getMessage().getText();
                         precedente.setNome(nome);
                         //collection.modify(index, precedente);
+                        collection.updateOne(eq("chatId", chatId), set("nome", precedente.getNome()));
                         collection.updateOne(eq("chatId", chatId), set("iterator", precedente.getIterator()+1));
                         message.setText("Inserisci la statistica che ti interessa di "+nome);
                     }
@@ -108,6 +113,7 @@ public class SportsGuruBot extends TelegramLongPollingBot{
                         String statistica= update.getMessage().getText();
                         precedente.setStatistica(statistica);
                         //collection.modify(index, precedente);
+                        collection.updateOne(eq("chatId", chatId), set("statistica", precedente.getStatistica()));
                         collection.updateOne(eq("chatId", chatId), set("iterator", precedente.getIterator()+1));
                         message.setText("Inserisci la data da cui conteggiare la statistica");
                     }
@@ -115,9 +121,22 @@ public class SportsGuruBot extends TelegramLongPollingBot{
                         String data= update.getMessage().getText();
                         precedente.setData(data);
                         //collection.modify(index, precedente);
+                        collection.updateOne(eq("chatId", chatId), set("data", precedente.getData()));
                         collection.updateOne(eq("chatId", chatId), set("iterator", precedente.getIterator()+1));
-                        message.setText("Riepilogo: \n"+precedente.toString());
-                        new HttpRequest(/*"ranking/teams/20182019"*/"").run();
+                        //message.setText("Riepilogo: \n"+precedente.toString());
+                        System.out.println(precedente.toString());
+                        String nomeURL=precedente.getNome().replace(" ", "%20");
+                        String response=new HttpRequest("player/"+precedente.getStatistica()+"/"+nomeURL+"&"+precedente.getData()).run();
+                        if(response==null){
+                            message.setText("Qualcosa è andato storto nell'esecuzione della richiesta, controlla di aver inserito i parametri correttamente");
+                        }
+                        else{
+                            int result=extractFromJSON(response,precedente.getStatistica());
+                            System.out.println("Result: \n"+prepareMessage(precedente,result));
+                            System.out.println("Valore Statisica: "+result);
+                            System.out.println("Finito: "+result);
+                            message.setText(prepareMessage(precedente,result));
+                        }
                     }
                     else{
                         message.setText("Comando non valido. Utilizza /research per effettuare una nuova ricerca oppure /help  per avere una lista dei comandi");
@@ -136,6 +155,19 @@ public class SportsGuruBot extends TelegramLongPollingBot{
     @Override
     public String getBotUsername() {
         return "SportsGuruBot";
+    }
+
+    private int extractFromJSON(String response,String statistica) {
+        JSONObject json=new JSONObject(response);
+        JSONArray data=json.getJSONArray("data");
+        System.out.println(data.toString());
+        JSONObject result=data.getJSONObject(0);
+        int value=result.getInt("value");
+        return value;
+    }
+
+    private String prepareMessage(Request precedente, int result) {
+        return "Dal "+precedente.getData()+" il giocatore "+precedente.getNome()+" ha effettuato "+result+" "+precedente.getStatistica();
     }
     
 }
