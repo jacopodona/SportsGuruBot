@@ -86,6 +86,10 @@ public class SportsGuruBot extends TelegramLongPollingBot{
                 System.out.println("Richiesta di aiuto");
                 message.setText("Utilizza /research per effettuare una ricerca");
             }
+            else if(text.equals("/stats")){
+                System.out.println("Richiesta di statistiche");
+                message.setText("Ecco un elenco di statistiche disponibili per la ricerca: \n"+statsList());
+            }
             else if(text.equals("/ping")){
                 System.out.println("Ping server");
                 String request=new HttpRequest("player/yellows/Ronaldo%20C.&20182019").run();
@@ -107,7 +111,7 @@ public class SportsGuruBot extends TelegramLongPollingBot{
                         //collection.modify(index, precedente);
                         collection.updateOne(eq("chatId", chatId), set("nome", precedente.getNome()));
                         collection.updateOne(eq("chatId", chatId), set("iterator", precedente.getIterator()+1));
-                        message.setText("Inserisci la statistica che ti interessa di "+nome);
+                        message.setText("Inserisci la statistica che ti interessa di "+nome+"\nPer sapere che statistiche sono disponibili per ogni sport utilizza /stats");
                     }
                     else if(precedente.getIterator()==1){//allora mi ha inviato la statistica
                         String statistica= update.getMessage().getText();
@@ -168,6 +172,14 @@ public class SportsGuruBot extends TelegramLongPollingBot{
 
     private String prepareMessage(Request precedente, int result) {
         return "Dal "+precedente.getData()+" il giocatore "+precedente.getNome()+" ha effettuato "+result+" "+precedente.getStatistica();
+    }
+
+    private String statsList() {
+        String calcio="Calcio: \nyellow - mostra i goal di un giocatore\n"
+                + "yellow - mostra i cartellini gialli di un giocatore \n"
+                + "reds - mostra i cartellini rossi di un giocatore\n"
+                + "cards - mostra i cartellini totali di un giocatore\n";
+        return calcio;
     }
     
 }
