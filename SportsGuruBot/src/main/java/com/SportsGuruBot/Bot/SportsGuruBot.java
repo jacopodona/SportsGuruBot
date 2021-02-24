@@ -107,6 +107,9 @@ public class SportsGuruBot extends TelegramLongPollingBot{
                     //int index=collection.getIndex(precedente.getUserid());
                     if(precedente.getIterator()==0){//allora mi ha inviato il nome
                         String nome= update.getMessage().getText();
+                        if(nome.charAt(nome.length()-1)==' '){
+                            nome=trimWhiteSpace(nome);
+                        }
                         precedente.setNome(nome);
                         //collection.modify(index, precedente);
                         collection.updateOne(eq("chatId", chatId), set("nome", precedente.getNome()));
@@ -180,6 +183,13 @@ public class SportsGuruBot extends TelegramLongPollingBot{
                 + "reds - mostra i cartellini rossi di un giocatore\n"
                 + "cards - mostra i cartellini totali di un giocatore\n";
         return calcio;
+    }
+
+    private String trimWhiteSpace(String nome) {//Assicurarsi che se ci sono spazi dopo il nome dell'atleta vengano rimossi per non generare errori
+        while(nome.charAt(nome.length()-1)==' '){
+            nome=nome.substring(0, nome.length()-2);
+        }
+        return nome;
     }
     
 }
