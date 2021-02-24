@@ -88,7 +88,7 @@ public class SportsGuruBot extends TelegramLongPollingBot{
             }
             else if(text.equals("/stats")){
                 System.out.println("Richiesta di statistiche");
-                message.setText("Ecco un elenco di statistiche disponibili per la ricerca: \n"+statsList());
+                message.setText("Ecco un elenco di statistiche disponibili per la ricerca \n"+statsList());
             }
             else if(text.equals("/ping")){
                 System.out.println("Ping server");
@@ -130,7 +130,7 @@ public class SportsGuruBot extends TelegramLongPollingBot{
                         //message.setText("Riepilogo: \n"+precedente.toString());
                         System.out.println(precedente.toString());
                         String nomeURL=precedente.getNome().replace(" ", "%20");
-                        String response=new HttpRequest("player/"+precedente.getStatistica()+"/"+nomeURL+"&"+precedente.getData()).run();
+                        String response=new HttpRequest("player/date/"+precedente.getStatistica()+"/"+nomeURL+"&"+precedente.getData()).run();
                         if(response==null){
                             message.setText("Qualcosa è andato storto nell'esecuzione della richiesta, controlla di aver inserito i parametri correttamente");
                         }
@@ -163,9 +163,9 @@ public class SportsGuruBot extends TelegramLongPollingBot{
 
     private int extractFromJSON(String response,String statistica) {
         JSONObject json=new JSONObject(response);
-        JSONArray data=json.getJSONArray("data");
-        System.out.println(data.toString());
-        JSONObject result=data.getJSONObject(0);
+        /*JSONArray data=json.getJSONArray("data");
+        System.out.println(data.toString());*/
+        JSONObject result=json.getJSONObject("data");
         int value=result.getInt("value");
         return value;
     }
@@ -175,8 +175,8 @@ public class SportsGuruBot extends TelegramLongPollingBot{
     }
 
     private String statsList() {
-        String calcio="Calcio: \nyellow - mostra i goal di un giocatore\n"
-                + "yellow - mostra i cartellini gialli di un giocatore \n"
+        String calcio="Calcio: \ngoals - mostra i goal di un giocatore\n"
+                + "yellows - mostra i cartellini gialli di un giocatore \n"
                 + "reds - mostra i cartellini rossi di un giocatore\n"
                 + "cards - mostra i cartellini totali di un giocatore\n";
         return calcio;
