@@ -92,7 +92,7 @@ public class SportsGuruBot extends TelegramLongPollingBot{
                 message.setText("Benvenuto su SportsGuruBot!\n"
                         + "Con questo bot puoi cercare le statistiche dei tuoi atleti preferiti inserendo il loro nome, la statistica che ti interessa e la data da cui conteggiare la tua statistica\n\n"
                         + "Per iniziare una ricerca, utilizza il comando /research\n"
-                        + "Per conoscere le statistiche disponibili per ogni sport, utilizza /stats"
+                        + "Per conoscere le statistiche disponibili per ogni sport, utilizza /stats\n"
                         + "Se ti trovi in difficoltà, utilizza il comando /help per rivedere la lista dei comandi disponibili");
             }
             else if(text.equals("/stats")){
