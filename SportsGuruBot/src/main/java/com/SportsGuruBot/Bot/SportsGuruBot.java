@@ -54,7 +54,7 @@ public class SportsGuruBot extends TelegramLongPollingBot{
         //database = database.withCodecRegistry(pojoCodecRegistry);
         collection= database.getCollection("UserRequestLog",Request.class);
         collection = collection.withCodecRegistry(pojoCodecRegistry);
-        collection.drop();
+        //collection.drop();
         //collection.insertOne(new Request("123456789","1","","",0));
     }
     
