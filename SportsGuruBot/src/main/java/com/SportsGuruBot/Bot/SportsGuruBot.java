@@ -44,7 +44,7 @@ public class SportsGuruBot extends TelegramLongPollingBot{
     private MongoClient mongoClient;
     private MongoDatabase database;
     private MongoCollection<Request> collection;
-    private final String connectionString="mongodb+srv://admin:TMAT5Zgmy2uEPRWg@cluster0.h6e4w.mongodb.net/<dbname>?retryWrites=true&w=majority";
+    private final String connectionString="<insert connection string MongoDB Atlas>";
             
     public SportsGuruBot() {
         mongoClient=MongoClients.create(connectionString);
@@ -61,7 +61,7 @@ public class SportsGuruBot extends TelegramLongPollingBot{
     
     @Override
     public String getBotToken() {
-        return "1597748075:AAGclJizyoHHOie97Qb85xES12JL3XvyLoM";
+        return "<insert token bot>";
     }
 
     @Override
@@ -80,7 +80,7 @@ public class SportsGuruBot extends TelegramLongPollingBot{
                 Request r=new Request(chatId,"","","",0);
                 //collection.add(r);
                 collection.insertOne(r);
-                message.setText("Inserisci il nome dell'atleta su cui vuoi conoscere una statistica");
+                message.setText("Inserisci nome e cognome dell'atleta su cui vuoi conoscere una statistica");
             }
             else if(text.equals("/help")){
                 System.out.println("Richiesta di aiuto");
@@ -101,7 +101,7 @@ public class SportsGuruBot extends TelegramLongPollingBot{
             }
             else if(text.equals("/ping")){
                 System.out.println("Ping server");
-                String request=new HttpRequest("player/yellows/Ronaldo%20C.&20182019").run();
+                String request=new HttpRequest("player/yellows/Ronaldo%20C.&SA20182019").run();
                 System.out.println(request);
                 System.out.println(extractFromJSON(request, "yellows"));
                 message.setText("Ping effettuato");
@@ -141,7 +141,9 @@ public class SportsGuruBot extends TelegramLongPollingBot{
                         collection.updateOne(eq("chatId", chatId), set("iterator", precedente.getIterator()+1));
                         //message.setText("Riepilogo: \n"+precedente.toString());
                         System.out.println(precedente.toString());
-                        String nomeURL=precedente.getNome().replace(" ", "%20");
+                        String formatoNome[]=precedente.getNome().split(" ");
+                        String nomeURL=formatoNome[1]+" "+formatoNome[0].charAt(0)+".";
+                        nomeURL=nomeURL.replace(" ", "%20");
                         String response=new HttpRequest("player/date/"+precedente.getStatistica()+"/"+nomeURL+"&"+precedente.getData().replace('/', '.')).run();
                         if(response==null){
                             message.setText("Qualcosa è andato storto nell'esecuzione della richiesta, controlla di aver inserito i parametri correttamente");
